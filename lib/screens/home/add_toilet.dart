@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:public_toilets/repositories/toilet_repository.dart';
+import 'package:public_toilets/utils/ui.dart';
 
 class AddToiletPage extends StatefulWidget {
   const AddToiletPage({super.key});
@@ -36,9 +37,12 @@ class _AddToiletPageState extends State<AddToiletPage> {
 
       if (mounted) Navigator.pop(context);
     } catch (e) {
-      setState(() {
-        _errorMessage = e.toString();
-      });
+      if (mounted) {
+        showOkDialog(
+            context: context,
+            title: Text('Error Saving Toilet'),
+            content: Text(e.toString()));
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -48,6 +52,8 @@ class _AddToiletPageState extends State<AddToiletPage> {
 
   @override
   Widget build(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
+
     buildLoadingOverlay() => Container(
         color: Colors.black.withOpacity(0.2),
         child: Center(child: CircularProgressIndicator()));
@@ -55,6 +61,11 @@ class _AddToiletPageState extends State<AddToiletPage> {
     handleClickSave() {
       if (validateForm()) {
         saveToilet();
+      } else {
+        showOkDialog(
+            context: context,
+            title: Text('Error'),
+            content: Text('Please enter name and distance.'));
       }
     }
 
@@ -89,7 +100,7 @@ class _AddToiletPageState extends State<AddToiletPage> {
                     padding: const EdgeInsets.all(16.0),
                     child: ElevatedButton(
                       onPressed: handleClickSave,
-                      child: Text('SAVE'),
+                      child: Text('SAVE', style: textTheme.bodyLarge),
                     ))
               ],
             )));
