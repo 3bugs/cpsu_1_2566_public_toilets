@@ -14,7 +14,6 @@ class _HomePageState extends State<HomePage> {
   List<Toilet>? _toilets;
   var _isLoading = false;
   String? _errorMessage;
-  final _toiletNameController = TextEditingController();
 
   @override
   void initState() {
@@ -57,24 +56,33 @@ class _HomePageState extends State<HomePage> {
     buildError() => Center(
         child: Padding(
             padding: const EdgeInsets.all(40.0),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(_errorMessage ?? '', textAlign: TextAlign.center),
-              SizedBox(height: 32.0),
-              ElevatedButton(onPressed: getToilets, child: Text('Retry'))
-            ])));
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(_errorMessage ?? '', textAlign: TextAlign.center),
+                SizedBox(height: 32.0),
+                ElevatedButton(onPressed: getToilets, child: Text('Retry'))
+              ],
+            )));
 
     buildList() => ListView.builder(
+        padding: EdgeInsets.only(bottom: 100.0),
         itemCount: _toilets!.length,
         itemBuilder: (ctx, i) {
           Toilet toilet = _toilets![i];
           return ToiletListItem(toilet: toilet);
         });
 
+    handleClickAdd() {
+      Navigator.pushNamed(context, 'add_toilet');
+    }
+
     return Scaffold(
         appBar: AppBar(
-          title: Text('Public Toilets'),
+          title: Text('PUBLIC TOILETS'),
         ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: handleClickAdd, child: Icon(Icons.add)),
         body: Stack(
           children: [
             if (_toilets?.isNotEmpty ?? false) buildList(),
@@ -84,58 +92,3 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 }
-
-/*
-Container(
-  padding: EdgeInsets.all(16.0),
-  child: Column(children: [
-    TextField(
-        controller: _toiletNameController,
-        decoration: InputDecoration(
-            hintText: 'ชื่อห้องน้ำ',
-            border: OutlineInputBorder(
-                borderSide: BorderSide(
-              width: 3,
-              color: Colors.greenAccent,
-            )))),
-    Row(children: [
-      Expanded(
-          child: TextField(
-              decoration: InputDecoration(
-                  hintText: 'ให้คะแนน',
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                    width: 3,
-                    color: Colors.greenAccent,
-                  ))))),
-      Expanded(
-          child: TextField(
-              decoration: InputDecoration(
-                  hintText: 'ระยะทาง',
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                    width: 3,
-                    color: Colors.greenAccent,
-                  )))))
-    ]),
-    Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: () {
-            /*var toiletName = _toiletNameController.text;
-          var toilet = Toilet(
-            name: toiletName,
-            averageRating: 5.0, // todo: homework
-            distance: 100.0, // todo: homework
-          );
-
-          setState(() {
-            ToiletRepository.toilets!.add(toilet);
-          });
-
-          _toiletNameController.clear();*/
-          },
-          child: Text('ADD'),
-        ))
-  ]))
-* */

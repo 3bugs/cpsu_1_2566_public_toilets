@@ -1,0 +1,85 @@
+{
+  "toilets": [
+    {
+      "id": 1,
+      "name": "ห้องน้ำ 1",
+      "distance": 150
+    },
+    {
+      "id": 2,
+      "name": "ห้องน้ำ 2",
+      "distance": 50
+    },
+    {
+      "id": 3,
+      "name": "ห้องน้ำ 3",
+      "distance": 350
+    },
+    {
+      "id": 4,
+      "name": "ห้องน้ำ 4",
+      "distance": 220
+    },
+    {
+      "id": 5,
+      "name": "ห้องน้ำ 5",
+      "distance": 550
+    },
+    {
+      "id": 6,
+      "name": "ห้องน้ำ 6",
+      "distance": 10
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "toiletId": 1,
+      "userId": 1,
+      "review": "test review 1",
+      "rating": 4
+    },
+    {
+      "id": 2,
+      "toiletId": 2,
+      "userId": 1,
+      "review": "test review 2",
+      "rating": 2
+    },
+    {
+      "id": 3,
+      "toiletId": 4,
+      "userId": 1,
+      "review": "test review 3",
+      "rating": 5
+    },
+    {
+      "id": 4,
+      "toiletId": 3,
+      "userId": 1,
+      "review": "test review 4",
+      "rating": 4
+    },
+    {
+      "id": 5,
+      "toiletId": 5,
+      "userId": 1,
+      "review": "test review 5",
+      "rating": 1
+    },
+    {
+      "id": 6,
+      "toiletId": 4,
+      "userId": 1,
+      "review": "test review 6",
+      "rating": 4
+    },
+    {
+      "id": 7,
+      "toiletId": 1,
+      "userId": 1,
+      "review": "test review 7",
+      "rating": 3
+    }
+  ]
+}
