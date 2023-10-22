@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:public_toilets/repositories/toilet_repository.dart';
 import 'package:public_toilets/utils/ui.dart';
 
-class AddToiletPage extends StatefulWidget {
+class AddToiletPage extends ConsumerStatefulWidget {
   const AddToiletPage({super.key});
 
   @override
-  State<AddToiletPage> createState() => _AddToiletPageState();
+  ConsumerState<AddToiletPage> createState() => _AddToiletPageState();
 }
 
-class _AddToiletPageState extends State<AddToiletPage> {
+class _AddToiletPageState extends ConsumerState<AddToiletPage> {
   var _isLoading = false;
-  String? _errorMessage;
 
   final _toiletNameController = TextEditingController();
   final _distanceController = TextEditingController();
@@ -24,7 +24,6 @@ class _AddToiletPageState extends State<AddToiletPage> {
   saveToilet() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
     await Future.delayed(Duration(seconds: 2));
@@ -33,7 +32,9 @@ class _AddToiletPageState extends State<AddToiletPage> {
       var toiletName = _toiletNameController.text;
       var distance = double.parse(_distanceController.text);
 
-      await ToiletRepository().addToilet(name: toiletName, distance: distance);
+      //await ToiletRepository().addToilet(name: toiletName, distance: distance);
+      var toiletRepo = ref.read(toiletProvider.notifier);
+      toiletRepo.addToilet(name: toiletName, distance: distance);
 
       if (mounted) Navigator.pop(context);
     } catch (e) {

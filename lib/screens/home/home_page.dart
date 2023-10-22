@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:public_toilets/models/toilet.dart';
 import 'package:public_toilets/repositories/toilet_repository.dart';
 import 'package:public_toilets/screens/home/toilet_list_item.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  List<Toilet>? _toilets;
+class _HomePageState extends ConsumerState<HomePage> {
+  //List<Toilet>? _toilets;
   var _isLoading = false;
   String? _errorMessage;
 
@@ -30,12 +31,15 @@ class _HomePageState extends State<HomePage> {
     await Future.delayed(Duration(seconds: 2));
 
     try {
-      var toilets = await ToiletRepository().getToilets();
+      /*var toilets = await ToiletRepository().getToilets();
       debugPrint('Number of toilets: ${toilets.length}');
 
       setState(() {
         _toilets = toilets;
-      });
+      });*/
+
+      var toiletRepo = ref.read(toiletProvider.notifier);
+      await toiletRepo.getToilets();
     } catch (e) {
       setState(() {
         _errorMessage = e.toString();
@@ -49,6 +53,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var toilets = ref.watch(toiletProvider);
+
     buildLoadingOverlay() => Container(
         color: Colors.black.withOpacity(0.2),
         child: Center(child: CircularProgressIndicator()));
@@ -65,12 +71,18 @@ class _HomePageState extends State<HomePage> {
               ],
             )));
 
+    handleClickToilet(Toilet toilet) {
+      Navigator.pushNamed(context, 'toilet_details', arguments: toilet.id);
+    }
+
     buildList() => ListView.builder(
         padding: EdgeInsets.only(bottom: 100.0),
-        itemCount: _toilets!.length,
+        itemCount: toilets!.length,
         itemBuilder: (ctx, i) {
-          Toilet toilet = _toilets![i];
-          return ToiletListItem(toilet: toilet);
+          Toilet toilet = toilets[i];
+          return GestureDetector(
+              onTap: () => handleClickToilet(toilet),
+              child: ToiletListItem(toilet: toilet));
         });
 
     handleClickAdd() {
@@ -85,7 +97,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: handleClickAdd, child: Icon(Icons.add)),
         body: Stack(
           children: [
-            if (_toilets?.isNotEmpty ?? false) buildList(),
+            if (toilets?.isNotEmpty ?? false) buildList(),
             if (_errorMessage != null) buildError(),
             if (_isLoading) buildLoadingOverlay()
           ],
